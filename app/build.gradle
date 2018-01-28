@@ -26,5 +26,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
-    // TODO 9 : Add OKHttp library
+    // TODO 1 : Add Volley library
+    compile 'com.android.volley:volley:1.1.0'
 }

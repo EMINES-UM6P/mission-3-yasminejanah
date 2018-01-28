@@ -1,11 +1,27 @@
 package com.authentification.khalidbaba.authentification;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.android.volley.Request.Method;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
+
 
 /**
  * Created by khalidbaba on 28/01/2018.
@@ -13,21 +29,105 @@ import android.widget.EditText;
 
 public class RegisterActivity extends Activity {
 
+    private static final String TAG = RegisterActivity.class.getSimpleName();
+    public String postUrl = "http://10.6.55.133:8888/project/v1/register";
+
+
+    EditText Email,Name, Password;
+    Button Register;
+    String _name, _email, _password;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        //TODO 1 : Instantiate object (EditTexts and Button)
 
+        Email = (EditText) findViewById(R.id.email);
+        Name = (EditText) findViewById(R.id.name);
+        Password = (EditText) findViewById(R.id.password);
 
-        //TODO 2 : handle click listener in register button and get values from the editText
+        Register = (Button) findViewById(R.id.btn_register);
 
+        Register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                _name = Name.getText().toString();
+                _email = Email.getText().toString();
+                _password = Password.getText().toString();
 
-        //TODO 3 : uses OKHttp to stock all the data(Name, Email, Password) in the data bases ans show Toast for return values
+            AddUser(_name, _email, _password);
 
-        //TODO 4 : if everything went right redirect the user to the signIn interface
+            }
+        });
+
 
 
     }
+
+
+    /**
+     * function to verify signup details in mysql db
+     * */
+    private void AddUser(final String name, final String email, final String password) {
+        String tag_string_req = "req_login";
+
+        StringRequest strReq = new StringRequest(Method.POST,
+                postUrl, new com.android.volley.Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, "Login Response: " + response.toString());
+                try {
+                    JSONObject jObj = new JSONObject(response);
+                    boolean error = jObj.getBoolean("error");
+
+                    // Check for error node in json
+                    if (!error) {
+                        // Launch main activity
+                        Intent intent = new Intent(RegisterActivity.this,
+                                MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        // Error in login. Get the error message
+                        String errorMsg = jObj.getString("message");
+                        Toast.makeText(getApplicationContext(),
+                                errorMsg, Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    // JSON error
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+
+            }
+        }, new com.android.volley.Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "Login Error: " + error.getMessage());
+                Toast.makeText(getApplicationContext(),
+                        error.getMessage(), Toast.LENGTH_LONG).show();
+
+            }
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                // Posting parameters to login url
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("name", name);
+                params.put("email", email);
+                params.put("password", password);
+
+                return params;
+            }
+
+        };
+
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+    }
 }
+
+

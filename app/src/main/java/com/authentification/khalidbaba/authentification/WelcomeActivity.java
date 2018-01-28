@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 public class WelcomeActivity extends Activity {
 
-    //TODO : Declare all variables (TextView, String)
+    //TODO 6 : Declare all variables (TextView, String)
 
     TextView Email;
     String _email;
