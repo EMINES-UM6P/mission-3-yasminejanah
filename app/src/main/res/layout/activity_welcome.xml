@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:gravity="center">
 
     <TextView
         android:id="@+id/welcome"
@@ -13,11 +14,13 @@
         android:layout_height="wrap_content"
         android:text="@string/welcome"
         android:textColor="@color/btn_login"
-        android:textSize="20sp"/>
+        android:textSize="40sp"
+        android:textAlignment="center"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/email"
-        android:textSize="10sp"/>
+        android:textSize="20sp"
+        android:textAlignment="center"/>
 </LinearLayout>
