@@ -22,6 +22,8 @@ public class WelcomeActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
 
+
+
         //TODO 7 : Instantiate all objects
 
         Email = (TextView) findViewById(R.id.email);
@@ -36,3 +38,5 @@ public class WelcomeActivity extends Activity {
 
     }
 }
+
+
